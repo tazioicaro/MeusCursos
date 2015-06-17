@@ -43,7 +43,9 @@
            <!-- tag itemLabel="#{msg[tipoLancamento.descricao]}" foi utilizado dessa forma para que o resultado podesse ser traduzido para o 
            idioma disponivel na configuração dos arquivos de sistema_en ou pt -->
              
+<!-- Permissão de visualização:
 
+     rendered="#{request.isUserInRole('caonsulta')}" - Somente usuário com role consulta (JAAS) -->
 <ui:define name="conteudo">
 
       <h:outputScript name="jquery-2.1.3.min.js" library="bootstrap/js"></h:outputScript>
@@ -63,7 +65,8 @@
            
 	<h:form id="frm" >
 		<h:button value="#{msg.new_msg}"  outcome="CadastroLancamento" />
-		<h:button value="#{msg.search}" outcome="ConsultaLancamentos" />
+		<h:button value="#{msg.search}" outcome="ConsultaLancamentos" 
+		 rendered="#{request.isUserInRole('caonsulta')}"/>
 		
 		<h:messages showDetail="false" showSummary="true" styleClass="form-messages tamanhoMensagem" errorClass="error" 
 		            infoClass="info"  tooltip="false"/>

@@ -87,7 +87,7 @@
 					<h:outputText value="Aberto" rendered="#{not lancamento.pago}" />
 				</h:column>
 
-				<h:column rendered="#{request.isUserinRole('cadastro')}">
+				<h:column rendered="#{request.isUserInRole('cadastro')}">
 					<h:link outcome="CadastroLancamento">
 						<h:graphicImage value="/imagens/editar.png" />
 						<f:param name="codigo" value="#{lancamento.codigo}" />

@@ -13,6 +13,11 @@
 		<!-- param utiliza para inserir na tela o nome do usuário, o facesContext é padrão em todas
 	     as páginas jsf e o userPrincipal.name representa o usuário logado e o nome do mesmo
 	     Obs.: O nome do usuário irá substituir o valor do placeHoldrs hello -->
+	     
+	     <!--  Permissão por Role do usuario logado
+	     rendered="#{request.isUserInRole('cadastro') and not request.isUserInRole('consulta')}">#{msg.entries}
+	     
+	     Se o usuário apenas obtver permissão de cadastro, o botão irá redirecionar para cadastro -->
 		<h:form>
 			<h:outputFormat value="#{msg.hello}" styleClass="logged-user">
 				<f:param value="#{facesContext.externalContext.userPrincipal.name}" />
@@ -20,7 +25,9 @@
 			</h:outputFormat>
 
 			<h:link outcome="home" id="home">#{msg.home}</h:link>
-			<h:link outcome="ConsultaLancamentos" id="lanca">#{msg.entries}</h:link>
+			<h:link outcome="ConsultaLancamentos" id="lanca" rendered="#{request.isUserInRole('consulta')}">#{msg.entries}</h:link>
+			<h:link outcome="CadastroLancamento" id="cad" 
+			        rendered="#{request.isUserInRole('cadastro') and not request.isUserInRole('consulta')}">#{msg.entries}</h:link>
 			<h:commandLink action="#{segurancaBean.sair}" id="log">#{msg.logout}</h:commandLink>
 		</h:form>
 	</div>
