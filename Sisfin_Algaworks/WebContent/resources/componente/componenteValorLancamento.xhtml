@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"> 
+
+<!-- Recebe uma classe e ele já informa o valor adequadamento com a formatação correta -->
+<composite:interface>
+	<composite:attribute name="lancamentoBean" required="true" />
+	<composite:attribute name="locale" default="pt_BR" />
+	<composite:attribute name="currencySymbol" default="R$" />	
+</composite:interface>
+
+<composite:implementation>
+	<h:outputText value="#{cc.attrs.lancamentoBean.valor}"	 
+	styleClass="#{cc.attrs.lancamentoBean.tipo.toString().toLowerCase()}">
+		<f:convertNumber locale="#{cc.attrs.locale}"	currencySymbol="#{cc.attrs.currencySymbol}" 
+		type="currency" />
+	</h:outputText>
+</composite:implementation>
+ 
+</html>
+
+
+
+

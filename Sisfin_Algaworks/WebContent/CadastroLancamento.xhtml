@@ -1,0 +1,172 @@
+<ui:composition template="/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+      
+
+
+<!-- O valor itemValue no campo PESSOA é o valor de cada opção do Dropbox 
+     Necessário converter o objeto pessoa, destacado pelo itemValue para um id para que o bropbox funcione
+           nome: PessoaConverter -->
+           
+           
+           <!--  
+                  -> Tag Tipo <-           
+              Value do selectOneRadio -> representa o valor que será atrinuindo quando selecionado o selectItens, nesta caso irá o objeto tipoLancamento
+              
+              -> Dentro do selectIntes <-
+                
+                Value -> variável que receberá o a lista do managebean
+                var -> variável que receberá os dados orieundos do value
+                itemLabel -> variável que renderizará a informação na tela
+                itemvalue -> variável que retornará o objeto selecionado no var                         
+            -->
+            
+             <!--  A tag Label serve para que o nome vindo no messages de erros , infos ou afins...venha o label-->
+             
+             <!-- Inserindo um atributo no data de pagamento no inputText para usar o campo pago para exibir o campo label data de pagamento  -->
+           
+           <!--  No checkbox utilizou-se do onchange="submit();" para submeter parte do formulário quando houver o
+           clique na seleção, assim poderá exibir ou não o campo pagamento-->
+           
+           <!-- Na tag h:selectBooleanCheckbox  foi utilizado a chamada do AJAX via JavaScript assim: 
+           onchange="jsf.ajax.request(this, event, {execute: '@form', render: 'frm:panel'}) onde representa que, quando ou houver um 
+           clique ou mudança de estado no checkbox será executado  um evento(event) nesta(this) tag. Tal evento dará o imput no form (@form)
+           e renderizará apenas mudanças na tag com id panel(frm:panel) , que neste caso é o panelGrid -->
+           
+           <!-- Na tag h:commandButton value="Salvar" 
+               foi utitizado AJAX e informado que todo o form (@form) será enviado para o servidor e tudo será renderizado de volta (@all)
+               é necessário redenrizar tudo para que as mensagens de erros sejam atualizadas.
+           -->
+           
+           <!-- tag itemLabel="#{msg[tipoLancamento.descricao]}" foi utilizado dessa forma para que o resultado podesse ser traduzido para o 
+           idioma disponivel na configuração dos arquivos de sistema_en ou pt -->
+             
+
+<ui:define name="conteudo">
+
+      <h:outputScript name="jquery-2.1.3.min.js" library="bootstrap/js"></h:outputScript>
+ <h:outputStylesheet name="sistema.css" library="css"></h:outputStylesheet>
+<h:outputStylesheet name="consulta-lancamento.css" library="css"></h:outputStylesheet>
+
+<title>#{cadastroLancamentoBean.editando ? msg.editing_entry : msg.new_entries}</title>
+
+<f:metadata>
+	<f:viewParam name="codigo" value="#{cadastroLancamentoBean.lancamento}" />
+</f:metadata>
+
+
+<div style="margin-left: 4%">
+	<h1>#{cadastroLancamentoBean.editando ? msg.editing_entry : msg.new_entries}</h1>   
+           
+           
+	<h:form id="frm" >
+		<h:button value="#{msg.new_msg}"  outcome="CadastroLancamento" />
+		<h:button value="#{msg.search}" outcome="ConsultaLancamentos" />
+		
+		<h:messages showDetail="false" showSummary="true" styleClass="form-messages tamanhoMensagem" errorClass="error" 
+		            infoClass="info"  tooltip="false"/>
+
+
+
+			<h:panelGrid columns="2" styleClass="form-grid"	columnClasses="label, campo" id="panel">
+
+				<h:outputLabel value="#{msg.type}" for="tipos" />
+				<h:selectOneRadio id="tipos"
+					value="#{cadastroLancamentoBean.lancamento.tipo}" required="true"
+					label="#{msg.entry_type}">
+					<f:selectItems value="#{cadastroLancamentoBean.tiposLancamentos}"
+						var="tipoLancamento" itemLabel="#{msg[tipoLancamento.descricao]}"
+						itemValue="#{tipoLancamento}" />
+				</h:selectOneRadio>
+
+
+				<h:outputLabel value="#{msg.person}" />
+				<h:selectOneMenu value="#{cadastroLancamentoBean.lancamento.pessoa}"
+						required="true" label="Pessoa">
+					<f:selectItem itemLabel="#{null}" noSelectionOption="true" />
+					<f:selectItems value="#{cadastroLancamentoBean.pessoas}"
+						var="pe" itemValue="#{pe}" itemLabel="#{pe.nome}"/>
+				</h:selectOneMenu>
+
+				<h:outputLabel value="#{msg.description}" for="descricao" />
+				<h:inputText id="descricao" value="#{cadastroLancamentoBean.lancamento.descricao}" size="50"  label="Descrição" required="true"/>
+
+
+				<h:outputLabel value="#{msg.amount}" for="valor" />
+				<h:inputText id="valor"	value="#{cadastroLancamentoBean.lancamento.valor}" 
+				            size="12" required="true" label="valor">
+					<f:convertNumber locale="pt_BR" maxFractionDigits="2"
+						minFractionDigits="2" />
+					<f:validateDoubleRange minimum="0" />
+				</h:inputText>
+				
+				
+				<h:outputLabel value="#{msg.due_date}" />
+				<h:inputText value="#{cadastroLancamentoBean.lancamento.dataVencimento}" required="true" label="data de Vencimento">
+					<f:convertDateTime pattern="dd/MM/yyy" locale="pt_BR" />
+				</h:inputText>
+				
+				<h:outputLabel />		
+
+				<h:panelGroup>
+					<h:selectBooleanCheckbox  id="pagoCheckbox" value="#{cadastroLancamentoBean.lancamento.pago}" label="#{msg.paid_bill}" immediate="true" 
+					valueChangeListener="#{cadastroLancamentoBean.LancamentoPagoModificado}"
+					onchange="jsf.ajax.request(this, event, {execute: '@form', render: 'frm:panel'})"/>
+					<h:outputLabel value="Conta paga" for="pagoCheckbox"  />
+				</h:panelGroup>
+				
+				
+              <h:outputLabel value="#{msg.payment_date}" for="Data de pagamento" rendered="#{cadastroLancamentoBean.lancamento.pago}"/>             
+				<h:inputText value="#{cadastroLancamentoBean.lancamento.dataPagamento}"  label="Data de pagamento" rendered="#{cadastroLancamentoBean.lancamento.pago}">
+					<f:convertDateTime pattern="dd/MM/yyy" locale="pt_BR" />
+					<f:validator validatorId="dataFutura"/>
+					<f:validator validatorId="exibicaoPagamento"/>
+					<f:attribute name="checado" value="#{cadastroLancamentoBean.lancamento.pago}"/>
+				</h:inputText>
+				
+				
+
+				<h:outputLabel />
+				<h:commandButton value="#{msg.save}"
+					action="#{cadastroLancamentoBean.salvar}" >
+					<f:ajax execute="@form" render="@all"/>
+					</h:commandButton>
+			</h:panelGrid>
+
+
+		</h:form>
+</div>
+
+</ui:define>
+      
+      </ui:composition>
+
+
+
+<!-- Meta data para jogar as informaçõe vindas do link editar da tela
+ConsultarLancamento para a variável Bean
+
+O numero foi jogado dentro do objeto Lancamento e o viewParam utiliza validadores e 
+conversores. Há o lancamentoConverter para converter esse numero em um Objeto 
+tipo Lancamento
+
+Além disso há o conversor LancamentoConverter que é chamado sempre que há instanciação do Bean Lancamento
+ -->
+
+
+
+<!--  
+<h:head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="X-AU-Compatible" content="IE=edge"/>
+
+
+    
+
+</h:head> 
+-->
+
+

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+      version="2.2">
+
+
+    <!-- Mensagens de validação -->
+	<application>
+		<message-bundle>com.sisfin.financeiro.resources.validacao</message-bundle>
+
+<!-- Pacote de mensagens (traduções de idiomas) -->
+<!-- A variavel var será utilizada para acessar as mensagens traduzidas no sistema -->
+    <resource-bundle>
+    <base-name>com.sisfin.financeiro.resources.sistema</base-name>
+    <var>msg</var>
+    
+    </resource-bundle>
+
+	<locale-config>
+		<default-locale>pt</default-locale>
+		<supported-locale>pt</supported-locale>
+		<supported-locale>en</supported-locale>
+	</locale-config>
+	
+	</application>
+
+</faces-config>

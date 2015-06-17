@@ -1,0 +1,27 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+	<h:graphicImage value="/imagens/logo.png" styleClass="logo" />
+
+	<div class="menu">
+
+		<!-- Inserido dentro de um form  prq é um comando de ação commandLink-->
+		<!-- outputFormat utiliza placeHolders para acrescentar uma informação -->
+		<!-- param utiliza para inserir na tela o nome do usuário, o facesContext é padrão em todas
+	     as páginas jsf e o userPrincipal.name representa o usuário logado e o nome do mesmo
+	     Obs.: O nome do usuário irá substituir o valor do placeHoldrs hello -->
+		<h:form>
+			<h:outputFormat value="#{msg.hello}" styleClass="logged-user">
+				<f:param value="#{facesContext.externalContext.userPrincipal.name}" />
+
+			</h:outputFormat>
+
+			<h:link outcome="home" id="home">#{msg.home}</h:link>
+			<h:link outcome="ConsultaLancamentos" id="lanca">#{msg.entries}</h:link>
+			<h:commandLink action="#{segurancaBean.sair}" id="log">#{msg.logout}</h:commandLink>
+		</h:form>
+	</div>
+</ui:composition>
