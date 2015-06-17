@@ -6,6 +6,10 @@
 	       driverName="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost/cursojsf"
 	       connectionName="root" connectionPassword="root"
 	       userTable="usuario" userNameCol="nome_usuario"  userCredCol="senha" 
-	       userRoleTable="permissao_usuario"  roleNameCol="nome_permissao"/>
+	       userRoleTable="permissao_usuario"  roleNameCol="nome_permissao"
+	       digest="MD5"/>
 	
 	</Context>
+	
+	<!-- Utilizando MD5 para criptografar a senha no DB , foi alterado o tamanho dos carateres do banco
+	para 32 para caber as senhas -->
